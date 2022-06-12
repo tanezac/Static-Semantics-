@@ -1,0 +1,142 @@
+// Project 3 - Static Semantics 
+// README
+// Tan Nguyen
+// ntnhmc@umsystem.edu
+// April 18, 2022
+
+
+I don't have any incomplete requests from project 3
+
+Summary: Static Semantics Definition 
+	Variables 
+		o Variables are defined using ‘Name Indentifier .’  
+		o Variables have to be defined before used first time (must satisfy syntax too) 
+		o Variable name can only be defined once 
+
+I. What I have achieved in this project
+
+1. Use suffix rules or pattern rules in Makfile
+2. Invocation
+	./statSem       // read from the keyboard until simulated keyboard EOF , then CRTL + D to end.
+	./statSem filename // reads from filename 
+	
+If user input of three or more strings on the command line should also generate this error message:
+	Error: Expected 1 or no arguments
+	Try './statSem -h' for more information.
+		
+I have provided the file to test the program. There are all 9 test files: test, test1, test2, test3, test4... test8
+Where test1, test2, test6, test7 will be the file containing the incorrect Static Semantics Definition.
+
+WHEN YOU run the program, just enter the file name, DONT enter the prefix ".txt"
+
+3. Command line parsing
+	I add option -h: Help. It will be used to show how to run the program.
+		
+	------------------------------------------------------------------------------------
+	How to implement program::
+	Invocation:  ./statSem [file]
+	There are three ways to run the program:
+	1. ./statSem to prompt user to enter from keyboard.
+	2. ./statSem < [filename] to direct inout file to scanner exectuable program.
+	3. ./statSem [filename] // without .input suffix in file name.
+	--------------------------------------------------------------------------------------
+
+	
+4. Program output
+---------------------------------------------------------------------------------------------------------------------
+Testing file content in test6.txt:
+	Name prog1
+	Spot prog1
+	Place
+	Name prog1
+	Home
+	Show id2
+
+Output: 
+	Parser Success!
+	Semantic Check Started
+	ERROR: IDENTIFIER 'prog1': Redefining a variable found on line: 4 (IDENTIFIER 'prog1' already define on line: 1)
+
+---------------------------------------------------------------------------------------------------------------------
+Testing file content in test7.txt:
+	Name prog1
+	Spot prog2
+	Place
+	Name id1
+	Home
+	Show prog1
+
+Output:
+	Parser Success!
+	Semantic Check Started
+	ERROR: IDENTIFIER 'prog2' On Line: 2 Was Not Declared In The Global Scope.(Using an undefined variable)
+
+--------------------------------------------------------------------------------------------------------------------
+Testing file content in test2.txt:
+	Name prog3 
+	Spot prog3 
+	Place 
+	Name id1 
+	. 
+	Here 2 There 
+	. 
+	Show id2   
+	Home 
+	Show prog3 
+	
+Output:
+	Parser Success!
+	Semantic Check Started
+	ERROR: IDENTIFIER 'id2' On Line: 8 Was Not Declared In The Global Scope.(Using an undefined variable)
+
+------------------------------------------------------------------------------------------------------------------
+Testing file content in test3.txt:
+	Name prog4 
+	Spot prog4 
+	Place 
+	Name id2 
+	. 
+	{ If id2 <- 5 . Show id2 } 
+	.  
+	Home 
+	Show prog4 
+	 
+Output: 
+	Parser Success!
+	Semantic Check Started
+	Semantic Check Complete
+	The symbol table: IDENTIFIER: prog4 id2
+
+
+	 <S> prog4 prog4
+	  <R>
+		<A> id2
+		<B> . .
+		  <C> { id2 }
+			<T> <-
+			<W> 5 .
+			<D> id2
+		  <B>
+	  <E> prog4
+
+--------------------------------------------------------------------------------------------------------------------
+II. BNF
+
+	<S>   ->    Name Identifier Spot Identifier <R> <E>  
+	<R>   ->    Place <A> <B> Home 
+	<E>   ->    Show Identifier 
+	<A>   ->    Name Identifier  
+	<B>   ->    empty |  .  <C> . <B> | <D> <B> 
+	<C>   ->    <F> | <G> 
+	<D>   ->    <H> | <J> | <K> | <L>  | <E> | <F> 
+	<F>   ->    { If  Identifier <T> <W> <D> } | { Do Again <D> <T> <W> } 
+	<G>   ->    Here Number There  
+	<T>   ->    <<  |  <-   
+	<V>   ->    +   |   %   |   &  
+	<H>   ->    /  <Z> 
+	<J>   ->    Assign Identifier <D> 
+	<K>   ->    Spot Number Show Number |  Move Identifer Show Identifier 
+	<L>   ->    Flip Identifier  
+	<W>   ->    Number  <V>  Number  |   Number . 
+	<Z>   ->    Identifier  |  Number               
+

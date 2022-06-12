@@ -1,0 +1,7 @@
+Name prog1  
+Spot prog1 
+Place  
+Name prog1
+Home  
+Show id2
+ 
